@@ -1,65 +1,198 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Package } from "lucide-react";
+import {
+  getFoundItems,
+  getLostItems,
+} from "../services/itemService";
+import { getCategories } from "../services/categoryService";
+import SearchBar from "../components/SearchBar";
+import FilterBar from "../components/FilterBar";
+import ItemGrid from "../components/ItemGrid";
+import Loading from "../components/Loading";
 
-const items = [
-  { name: "Black Backpack", category: "Bags", location: "Library", date: "Nov 15" },
-  { name: "Student ID", category: "Documents", location: "Lecture Hall", date: "Nov 16" },
-  { name: "Water Bottle", category: "Accessories", location: "Cafeteria", date: "Nov 17" },
-  { name: "Headphones", category: "Electronics", location: "Computer Lab", date: "Nov 18" },
-];
-
-export default function BrowseItems({ onHome }) {
+function BrowseItems() {
+  const [items, setItems] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedType, setSelectedType] = useState("found");
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const filteredItems = items.filter((item) => {
-    const matchesSearch =
-      item.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.location.toLowerCase().includes(search.toLowerCase());
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (err) {
+        console.error("Could not load categories:", err);
+      }
+    }
 
-    const matchesCategory =
-      category === "All" || item.category === category;
+    loadCategories();
+  }, []);
 
-    return matchesSearch && matchesCategory;
-  });
+  useEffect(() => {
+    async function loadItems() {
+      setLoading(true);
+      setError("");
+
+      try {
+        const filters = {
+          page,
+          per_page: 9,
+          search,
+          category_id: selectedCategory === "all" ? "" : selectedCategory,
+        };
+
+        let data;
+
+        if (selectedType === "lost") {
+          data = await getLostItems(filters);
+        } else if (selectedType === "found") {
+          data = await getFoundItems(filters);
+        } else {
+          const [lostData, foundData] = await Promise.all([
+            getLostItems(filters),
+            getFoundItems(filters),
+          ]);
+
+          const combinedItems = [
+            ...(lostData.items || []).map((item) => ({
+              ...item,
+              report_type: "lost",
+            })),
+            ...(foundData.items || []).map((item) => ({
+              ...item,
+              report_type: "found",
+            })),
+          ];
+
+          data = {
+            items: combinedItems,
+            pages: Math.max(lostData.pages || 1, foundData.pages || 1),
+          };
+        }
+
+        setItems(
+          (data.items || []).map((item) => ({
+            ...item,
+            report_type: item.report_type || selectedType,
+          }))
+        );
+        setPages(data.pages || 1);
+      } catch (err) {
+        setError(err.message || "Could not load items.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadItems();
+  }, [page, search, selectedCategory, selectedType]);
+
+  function handleSearch() {
+    setPage(1);
+    setSearch(searchInput.trim());
+  }
+
+  function handleCategoryChange(value) {
+    setPage(1);
+    setSelectedCategory(value);
+  }
+
+  function handleTypeChange(value) {
+    setPage(1);
+    setSelectedType(value);
+  }
 
   return (
-    <div style={{ padding: "30px", fontFamily: "Arial", background: "#f4f7fb", minHeight: "100vh" }}>
-      <button onClick={onHome}>← Home</button>
-      <h1>Browse Found Items</h1>
+    <div className="browse-page">
+      <section className="browse-heading">
+        <span>FOUNDIT COLLECTION</span>
+        <h1>Browse Items</h1>
+        <p>
+          Search through lost and found reports to help belongings
+          find their way home.
+        </p>
 
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search item or location..."
-        style={{ padding: "12px", width: "min(100%, 350px)", marginBottom: "15px" }}
-      />
+        <SearchBar
+          value={searchInput}
+          onChange={setSearchInput}
+          onSearch={handleSearch}
+          placeholder="Search for an item..."
+        />
 
-      <br />
+        <FilterBar
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={handleCategoryChange}
+          selectedType={selectedType}
+          onTypeChange={handleTypeChange}
+        />
+      </section>
 
-      <select value={category} onChange={(e) => setCategory(e.target.value)} style={{ padding: "10px" }}>
-        <option>All</option>
-        <option>Bags</option>
-        <option>Documents</option>
-        <option>Accessories</option>
-        <option>Electronics</option>
-      </select>
+      <section className="browse-results">
+        <div className="results-heading">
+          <h2>
+            {selectedType === "all"
+              ? "All Items"
+              : selectedType === "lost"
+                ? "Lost Items"
+                : "Found Items"}
+          </h2>
+          <span>{items.length} items on this page</span>
+        </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px", marginTop: "25px" }}>
-        {filteredItems.map((item, index) => (
-          <div key={index} style={{ background: "white", padding: "20px", width: "220px", borderRadius: "10px", boxShadow: "0 2px 8px #ddd" }}>
-            <h3>{item.name}</h3>
-            <p>Category: {item.category}</p>
-            <p>Location: {item.location}</p>
-            <p>Date: {item.date}</p>
-            <button onClick={() => alert("Item claiming will be connected to the backend.")}>
-              Claim Item
+        {loading && <Loading message="Loading items..." />}
+
+        {!loading && error && (
+          <p className="browse-error">{error}</p>
+        )}
+
+        {!loading && !error && items.length === 0 && (
+          <div className="empty-items">
+            <Package size={45} />
+            <h3>No items found</h3>
+            <p>Try changing your search or filters.</p>
+          </div>
+        )}
+
+        {!loading && !error && items.length > 0 && (
+          <ItemGrid
+            items={items}
+            type={selectedType === "all" ? "found" : selectedType}
+          />
+        )}
+
+        {!loading && !error && pages > 1 && (
+          <div className="pagination">
+            <button
+              onClick={() => setPage((current) => current - 1)}
+              disabled={page === 1}
+            >
+              Previous
+            </button>
+
+            <span>
+              Page {page} of {pages}
+            </span>
+
+            <button
+              onClick={() => setPage((current) => current + 1)}
+              disabled={page === pages}
+            >
+              Next
             </button>
           </div>
-        ))}
-      </div>
-
-      {filteredItems.length === 0 && <p>No items found.</p>}
+        )}
+      </section>
     </div>
   );
 }
+
+export default BrowseItems;
