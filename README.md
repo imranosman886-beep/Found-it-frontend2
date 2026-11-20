@@ -1,16 +1,123 @@
-# React + Vite
+# FoundIt - Lost and Found Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## About the Project
 
-Currently, two official plugins are available:
+FoundIt is a web application that helps people report lost belongings and find items that have been found by other people.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Users can browse lost and found reports, submit claims for their belongings, and receive notifications. Administrators can manage users, reports and claims.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- User registration and login
+- Session-based authentication
+- Browse lost and found items
+- Search items
+- Filter items by category and type
+- View item details
+- Report lost items
+- Report found items
+- Submit claims for found items
+- View personal reports
+- View personal claims
+- Receive and manage notifications
+- User profile page
+- Admin dashboard
+- Manage users and reports
+- Approve or reject claims
+- Manage item handovers
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React
+- Vite
+- JavaScript
+- Tailwind CSS
+- CSS
+- React Router
+- Lucide React
+- Fetch API
+
+## Backend
+
+The frontend connects to the FoundIt Flask backend.
+
+API URL:
+
+https://foundit-backend-1c64.onrender.com
+
+## Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/imranosman886-beep/Found-it-frontend2.git
+```
+
+### 2. Open the project
+
+```bash
+cd Found-it-frontend2
+```
+
+### 3. Install dependencies
+
+```bash
+npm install
+```
+
+### 4. Create an environment file
+
+Create a `.env` file in the root folder and add:
+
+```env
+VITE_API_BASE_URL=https://foundit-backend-1c64.onrender.com
+```
+
+### 5. Start the development server
+
+```bash
+npm run dev
+```
+
+Open the local URL displayed in your terminal, usually:
+
+http://localhost:5173
+
+## Build for Production
+
+To create a production build, run:
+
+```bash
+npm run build
+```
+
+## Project Structure
+
+```text
+src/
+├── assets/
+├── components/
+├── context/
+├── hooks/
+├── layouts/
+├── pages/
+├── services/
+├── tests/
+├── utils/
+├── App.jsx
+├── App.css
+├── index.css
+└── main.jsx
+```
+
+## Authentication
+
+FoundIt uses session-based authentication. The frontend includes credentials with API requests so that users can stay logged in while navigating the application.
+
+## Contributors
+
+Developed as a group project.
+
+## License
+
+This project was created for educational purposes.
