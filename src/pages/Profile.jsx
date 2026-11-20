@@ -55,5 +55,4 @@ function Profile() {
     </div>
   );
 }
-
-import { User, Mail, Shield, Calendar } from "lucide-react";
+export default Profile;
