@@ -61,4 +61,3 @@ export async function getMyFoundItems(userId) {
   const data = await getFoundItems({ page: 1, per_page: 100 });
   return (data.items || []).filter((item) => item.user_id === userId);
 }
-//holds helper functions for making API requests related to items, including fetching found and lost items, creating new items, and retrieving items associated with a specific user.
