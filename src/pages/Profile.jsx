@@ -56,7 +56,6 @@ function Profile() {
   );
 }
 
-=======
 import { User, Mail, Shield, Calendar } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
