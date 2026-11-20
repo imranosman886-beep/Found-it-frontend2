@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+// IMPORTS - brings in tools we need
+import { useEffect, useState } from "react"; // React hooks for memory (useState) and running code on load (useEffect)
+import { Link } from "react-router-dom"; //Used to navigate to other pages without refreshing page
 import {
   ClipboardList,
   Package,
@@ -7,45 +8,59 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-} from "lucide-react";
-import { getMyClaims } from "../services/claimService";
+} from "lucide-react"; // Icons to make the UI look cleaner and more user-friendly
+import { getMyClaims } from "../services/claimService"; // Function to fetch the user's claims from the backend
+
 
 function MyClaims() {
-  const [claims, setClaims] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState("all");
+  // State variables that automatically update the page when they change
+  const [claims, setClaims] = useState([]);         // Holds the list of claims from backend (starts empty)  
+  const [loading, setLoading] = useState(true);     // True while we are waiting for the backend to respond, false when we have the data
+  const [error, setError] = useState("");           // Holds any error messages if the backend request fails
+  const [activeTab, setActiveTab] = useState("all");// Tracks which tab is currently selected (all, pending, approved, rejected)
 
+
+  // Fetch the user's claims from the backend when the page loads
   useEffect(() => {
     async function loadClaims() {
       try {
+
+        // Ask the backend for the user's claims
         const data = await getMyClaims();
+        // Check to make sure 'data' is actually a list (array) before we try to use (save) it. If it's not, we set claims to an empty list.
         setClaims(Array.isArray(data) ? data : []);
       } catch (err) {
+        // If the request fails, we show an error message to the user
         setError(err.message || "Could not load your claims.");
       } finally {
+        // Whether the request succeeds or fails, we stop showing the loading message
         setLoading(false);
       }
     }
 
-    loadClaims();
-  }, []);
+    //Call the function we just defined to fetch the claims from the backend
+    loadClaims(); 
+  }, []); // empty brackets [] mean: "only run this code once, when the page first loads"
 
+  // Filtering - decide which claims to show based on the selected tab (all, pending, approved, rejected)
   const filteredClaims =
     activeTab === "all"
-      ? claims
-      : claims.filter((claim) => claim.status === activeTab);
+      ? claims // If the "all" tab is selected, show all claims
+      : claims.filter((claim) => claim.status === activeTab); // If not "all", only show claims that match the selected status
 
+  // Helper function to return the correct icon based on the claim's status
   function getStatusIcon(status) {
-    if (status === "approved") return <CheckCircle size={16} />;
-    if (status === "rejected") return <XCircle size={16} />;
-    return <Clock size={16} />;
+    if (status === "approved") return <CheckCircle size={16} />; // Green check mark for approved claims
+    if (status === "rejected") return <XCircle size={16} />; // Red X for rejected claims
+    return <Clock size={16} />; // Clock icon for pending claims
   }
 
+  // If still fetching data from the backend, show a loading message to the user
   if (loading) {
     return <p className="loading-message">Loading your claims...</p>;
   }
 
+  // Render the page
   return (
     <main className="page-container my-claims-page">
       <div className="my-claims-heading">

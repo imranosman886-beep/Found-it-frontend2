@@ -1,13 +1,18 @@
-import { User, Mail, Shield, Calendar } from "lucide-react";
-import { useAuth } from "../context/AuthContext";
+//IMPORTS
+import { User, Mail, Shield, Calendar } from "lucide-react"; // Icons to make the UI look cleaner and more user-friendly
+import { useAuth } from "../context/AuthContext";  // Custom hook to get logged-in user data 
 
 function Profile() {
+
+// Get the currently logged-in user's data from the AuthContext
   const { user } = useAuth();
 
+  // If user data hasn't loaded yet, show loading text so the page doesn't crash
   if (!user) {
     return <p className="loading-message">Loading profile...</p>;
   }
 
+  // Render the profile page with the user's information
   return (
     <div className="profile-page">
       <div className="profile-card">
