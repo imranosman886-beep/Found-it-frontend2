@@ -1,4 +1,3 @@
-
 import apiRequest from "./api";
 
 // Get notifications for the logged-in user

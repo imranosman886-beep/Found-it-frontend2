@@ -1,4 +1,3 @@
-
 import apiRequest from "./api";
 
 export async function createClaim(found_item_id, message) {
