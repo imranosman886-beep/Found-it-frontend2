@@ -29,7 +29,7 @@ export async function getLostItems({
   const params = new URLSearchParams({
     page: String(page),
     per_page: String(per_page),
-    search,
+    search ,
   });
 
   if (category_id) {
