@@ -2,11 +2,7 @@
 import apiRequest from "./api";
 
 export async function getFoundItems({
-  page = 1,
-  per_page = 9,
-  search = "",
-  category_id = "",
-} = {}) {
+  page = 1, per_page = 9, search = "", category_id = "",} = {}) {
   const params = new URLSearchParams({
     page: String(page),
     per_page: String(per_page),
