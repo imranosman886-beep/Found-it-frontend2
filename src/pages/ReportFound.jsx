@@ -62,7 +62,7 @@ function ReportFound() {
     }
   }
 
-  if (!user) {
+  if (!user){
     return (
       <div className="page-container">
         <h2>Please log in to report a found item.</h2>
