@@ -1,59 +1,89 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export default function Signup({ onLogin, onHome }) {
-  const [name, setName] = useState("");
+function Signup() {
+  const { signupUser } = useAuth();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setError("");
 
-    alert("Registration submitted. Backend connection will be added.");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await signupUser(email, password);
+      navigate("/login");
+    } catch (err) {
+      setError(err.message || "Could not create your account.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <div style={{ background: "#f4f7fb", minHeight: "100vh", display: "grid", placeItems: "center", fontFamily: "Arial" }}>
-      <form onSubmit={handleSubmit} style={{ background: "white", padding: "35px", width: "min(90%, 380px)", borderRadius: "12px", boxShadow: "0 4px 15px #ddd" }}>
-        <button type="button" onClick={onHome}>← Home</button>
+    <main className="page-container auth-page">
+      <div className="auth-card">
         <h1>Create Account</h1>
-        <p>Join the FoundIt campus community.</p>
+        <p>Join FoundIt and help reunite people with their belongings.</p>
 
-        <label>Full Name</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          placeholder="Your full name"
-          style={{ display: "block", width: "100%", padding: "12px", margin: "10px 0 20px", boxSizing: "border-box" }}
-        />
+        {error && <p className="form-error">{error}</p>}
 
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          placeholder="Your student email"
-          style={{ display: "block", width: "100%", padding: "12px", margin: "10px 0 20px", boxSizing: "border-box" }}
-        />
+        <form onSubmit={handleSubmit} className="auth-form">
+          <label htmlFor="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            placeholder="Enter your email"
+            required
+          />
 
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          minLength={6}
-          required
-          placeholder="Create a password"
-          style={{ display: "block", width: "100%", padding: "12px", margin: "10px 0 20px", boxSizing: "border-box" }}
-        />
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            placeholder="At least 8 characters"
+            minLength={8}
+            required
+          />
 
-        <button type="submit" style={{ width: "100%", padding: "12px", background: "#1683d8", color: "white", border: "none", borderRadius: "6px" }}>
-          Sign Up
-        </button>
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={(event) => setConfirmPassword(event.target.value)}
+            placeholder="Enter your password again"
+            minLength={8}
+            required
+          />
 
-        <p>Already registered? <button type="button" onClick={onLogin}>Login</button></p>
-      </form>
-    </div>
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating Account..." : "Sign Up"}
+          </button>
+        </form>
+
+        <p className="auth-switch">
+          Already have an account? <Link to="/login">Log in</Link>
+        </p>
+      </div>
+    </main>
   );
 }
+export default Signup;

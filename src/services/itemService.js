@@ -1,3 +1,4 @@
+
 import apiRequest from "./api";
 
 export async function getFoundItems({
@@ -12,7 +13,9 @@ export async function getFoundItems({
     search,
   });
 
-  if (category_id) params.set("category_id", String(category_id));
+  if (category_id) {
+    params.set("category_id", String(category_id));
+  }
 
   return apiRequest(`/api/found-items?${params.toString()}`);
 }
@@ -29,13 +32,19 @@ export async function getLostItems({
     search,
   });
 
-  if (category_id) params.set("category_id", String(category_id));
+  if (category_id) {
+    params.set("category_id", String(category_id));
+  }
 
   return apiRequest(`/api/lost-items?${params.toString()}`);
 }
 
 export async function getFoundItem(id) {
   return apiRequest(`/api/found-items/${id}`);
+}
+
+export async function getLostItem(id) {
+  return apiRequest(`/api/lost-items/${id}`);
 }
 
 export async function createFoundItem(itemData) {
