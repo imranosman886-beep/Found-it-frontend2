@@ -5,7 +5,7 @@ function SearchBar({
   value,
   onChange,
   onSearch,
-  placeholder = "Search for an item...",
+  placeholder = "Search for an item.....",
 }) {
   function handleSubmit(event) {
     event.preventDefault();
