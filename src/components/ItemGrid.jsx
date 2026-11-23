@@ -6,7 +6,7 @@ function ItemGrid({ items = [], type = "found" }) {
     return (
       <div className="empty-state">
         <h3>No items found</h3>
-        <p>Try searching for something else.</p>
+        <p>please Try searching for something else.</p>
       </div>
     );
   }
