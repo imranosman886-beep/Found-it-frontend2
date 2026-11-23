@@ -2,10 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Package, Search, MapPin } from "lucide-react";
-import {
-  getMyLostItems,
-  getMyFoundItems,
-} from "../services/itemService";
+import { getMyLostItems, getMyFoundItems } from "../services/itemService";
 import { useAuth } from "../context/AuthContext";
 
 function MyReports() {
