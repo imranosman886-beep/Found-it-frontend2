@@ -28,14 +28,14 @@ export function AuthProvider({ children }) {
     loadUser();
   }, []);
 
-  async function loginUser(email, password) {
-    const data = await authService.login(email, password);
+  async function loginUser(identifier, password, isAdmin = false) {
+    const data = await authService.login(identifier, password, isAdmin);
     setUser(data.user);
     return data;
   }
 
-  async function signupUser(email, password) {
-    return authService.signup(email, password);
+  async function signupUser(userDetails) {
+    return authService.signup(userDetails);
   }
 
   async function logoutUser() {
