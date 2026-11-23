@@ -6,8 +6,9 @@ function Login() {
   const { loginUser } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [accountType, setAccountType] = useState("student");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +18,9 @@ function Login() {
     setLoading(true);
 
     try {
-      await loginUser(email, password);
+      const isAdmin = accountType === "admin";
+
+      await loginUser(identifier, password, isAdmin);
       navigate("/");
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
@@ -35,13 +38,32 @@ function Login() {
         {error && <p className="form-error">{error}</p>}
 
         <form onSubmit={handleSubmit} className="auth-form">
-          <label htmlFor="email">Email Address</label>
+          <label htmlFor="accountType">Account Type</label>
+          <select
+            id="accountType"
+            value={accountType}
+            onChange={(event) => setAccountType(event.target.value)}
+          >
+            <option value="student">Student</option>
+            <option value="staff">Staff</option>
+            <option value="admin">Admin</option>
+          </select>
+
+          <label htmlFor="identifier">
+            {accountType === "admin"
+              ? "Admin Email Address"
+              : "Institutional ID"}
+          </label>
           <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="Enter your email"
+            id="identifier"
+            type={accountType === "admin" ? "email" : "text"}
+            value={identifier}
+            onChange={(event) => setIdentifier(event.target.value)}
+            placeholder={
+              accountType === "admin"
+                ? "Enter your admin email"
+                : "Enter your institutional ID"
+            }
             required
           />
 
