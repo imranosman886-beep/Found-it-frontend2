@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Search,
-  ShieldCheck,
-  Users,
-  HeartHandshake,
-  ArrowRight,
-  Package,
-  MapPin,
-} from "lucide-react";
+import { Search, ShieldCheck, Users, HeartHandshake, ArrowRight, Package, MapPin,} from "lucide-react";
 import { getFoundItems } from "../services/itemService";
 
 function Home() {
