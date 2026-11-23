@@ -5,7 +5,7 @@ import { MapPin, Calendar } from "lucide-react";
 function ItemCard({ item, type = "found" }) {
   const itemId = item.id;
   const itemName = item.item_name || "Unnamed item";
-  const location = item.location || "Location not provided";
+  const location = item.location || "Location has not been provided";
 
   const itemType = item.report_type || type;
   const isLost = itemType === "lost";
