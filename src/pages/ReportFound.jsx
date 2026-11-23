@@ -21,6 +21,11 @@ function ReportFound() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const today = new Date();
+  const maxDate = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
   useEffect(() => {
     async function loadCategories() {
       try {
@@ -46,6 +51,12 @@ function ReportFound() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+
+    if (formData.date_found > maxDate) {
+      setError("Found date cannot be in the future.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -62,7 +73,7 @@ function ReportFound() {
     }
   }
 
-  if (!user){
+  if (!user) {
     return (
       <div className="page-container">
         <h2>Please log in to report a found item.</h2>
@@ -117,6 +128,7 @@ function ReportFound() {
           type="date"
           value={formData.date_found}
           onChange={handleChange}
+          max={maxDate}
           required
         />
 

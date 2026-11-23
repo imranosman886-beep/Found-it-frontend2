@@ -21,6 +21,11 @@ function ReportLost() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const today = new Date();
+  const maxDate = `${today.getFullYear()}-${String(
+    today.getMonth() + 1
+  ).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+
   useEffect(() => {
     async function loadCategories() {
       try {
@@ -46,6 +51,12 @@ function ReportLost() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+
+    if (formData.date_lost > maxDate) {
+      setError("Lost date cannot be in the future.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -117,6 +128,7 @@ function ReportLost() {
           type="date"
           value={formData.date_lost}
           onChange={handleChange}
+          max={maxDate}
           required
         />
 
