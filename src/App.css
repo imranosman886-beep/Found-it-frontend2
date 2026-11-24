@@ -2361,3 +2361,205 @@ button:disabled {
     padding: 25px 18px;
   }
 }
+
+
+/* =========================================
+   FOUNDIT - PREMIUM BLUE THEME OVERRIDES
+   Add this at the bottom of App.css
+========================================= */
+
+:root {
+  --navy: #102a43;
+  --navy-light: #163b63;
+  --blue: #1d4ed8;
+  --blue-hover: #1e40af;
+  --soft-blue: #dbeafe;
+  --page-bg: #f1f5f9;
+  --white: #ffffff;
+  --text: #172033;
+  --muted: #64748b;
+  --border: #e2e8f0;
+}
+
+body {
+  background: var(--page-bg);
+  color: var(--text);
+}
+
+/* Navbar */
+.navbar {
+  background: var(--navy);
+  border-bottom: none;
+  box-shadow: 0 3px 15px rgba(16, 42, 67, 0.15);
+}
+
+.logo {
+  color: var(--white);
+}
+
+.logo span {
+  color: #93c5fd;
+}
+
+.nav-link,
+.user-email {
+  color: #dbeafe;
+}
+
+.nav-link:hover,
+.nav-link.active,
+.login-link {
+  color: var(--white);
+}
+
+.signup-button,
+.logout-button {
+  background: var(--blue);
+  color: var(--white);
+}
+
+.signup-button:hover,
+.logout-button:hover {
+  background: var(--blue-hover);
+}
+
+@media (max-width: 950px) {
+  .nav-links {
+    background: var(--navy);
+    border-bottom: 1px solid #294763;
+  }
+}
+
+/* Main backgrounds */
+.browse-page,
+.profile-page {
+  background: var(--page-bg);
+}
+
+.features-section,
+.featured-section {
+  background: #f1f5f9;
+}
+
+/* Headings */
+.hero-content h1,
+.section-heading h2,
+.browse-heading h1,
+.results-heading h2,
+.details-content h1,
+.report-heading h1,
+.auth-card h1,
+.my-reports-heading h1,
+.my-claims-heading h1,
+.notifications-heading h1,
+.admin-heading h1,
+.profile-card h1 {
+  color: var(--navy);
+}
+
+/* Buttons */
+.btn-primary,
+.browse-search button,
+.pagination button,
+.item-details-link,
+.report-form button,
+.auth-form button,
+.claim-form button,
+.search-bar button,
+.mark-read-button {
+  background: var(--blue);
+}
+
+.btn-primary:hover,
+.browse-search button:hover,
+.item-details-link:hover,
+.report-form button:hover,
+.auth-form button:hover,
+.claim-form button:hover,
+.search-bar button:hover,
+.mark-read-button:hover {
+  background: var(--blue-hover);
+}
+
+/* Cards */
+.feature-card,
+.featured-card,
+.browse-item-card,
+.my-report-card,
+.my-claim-card,
+.claim-card,
+.notification-card,
+.admin-stat-card,
+.admin-section,
+.auth-card,
+.report-form,
+.profile-card {
+  border: 1px solid var(--border);
+  box-shadow: 0 5px 18px rgba(16, 42, 67, 0.05);
+  border-radius: 14px;
+}
+
+.feature-card:hover,
+.featured-card:hover,
+.browse-item-card:hover,
+.my-report-card:hover {
+  box-shadow: 0 12px 28px rgba(16, 42, 67, 0.09);
+}
+
+/* Blue labels and icons */
+.hero-label,
+.section-heading span,
+.browse-heading > span,
+.my-reports-heading span,
+.my-claims-heading span {
+  color: var(--blue);
+}
+
+.hero-icon,
+.feature-icon,
+.featured-image,
+.item-image-placeholder,
+.profile-avatar,
+.claim-card-icon,
+.notification-icon {
+  background: var(--soft-blue);
+  color: var(--blue);
+}
+
+/* Forms */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--blue);
+  outline: none;
+}
+
+/* Tables */
+.admin-table th {
+  background: #f1f5f9;
+  color: var(--navy);
+}
+
+/* Footer */
+.footer {
+  background: var(--navy);
+}
+
+.footer-bottom {
+  border-color: #294763;
+}
+
+/* Homepage call to action */
+.home-cta {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+}
+
+/* Cleaner transitions */
+button,
+a,
+.feature-card,
+.featured-card,
+.browse-item-card,
+.my-report-card {
+  transition: all 0.2s ease;
+}
