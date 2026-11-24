@@ -2,7 +2,11 @@
 import apiRequest from "./api";
 
 export async function getFoundItems({
-  page = 1, per_page = 9, search = "", category_id = "",} = {}) {
+  page = 1,
+  per_page = 9,
+  search = "",
+  category_id = "",
+} = {}) {
   const params = new URLSearchParams({
     page: String(page),
     per_page: String(per_page),
@@ -54,6 +58,16 @@ export async function createLostItem(itemData) {
   return apiRequest("/api/lost-items", {
     method: "POST",
     body: JSON.stringify(itemData),
+  });
+}
+
+export async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  return apiRequest("/api/upload-image", {
+    method: "POST",
+    body: formData,
   });
 }
 

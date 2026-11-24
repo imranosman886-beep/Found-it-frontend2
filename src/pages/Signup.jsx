@@ -1,11 +1,14 @@
 
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Signup() {
   const { signupUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirectTo = location.state?.from || { pathname: "/" };
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -63,7 +66,11 @@ function Signup() {
         password,
       });
 
-      navigate("/login");
+      // Go directly to the page the user originally wanted.
+      navigate(
+        `${redirectTo.pathname || "/"}${redirectTo.search || ""}${redirectTo.hash || ""}`,
+        { replace: true }
+      );
     } catch (err) {
       setError(err.message || "Could not create your account.");
     } finally {
@@ -145,6 +152,7 @@ function Signup() {
           <p className="password-requirements">
             Password must contain:
           </p>
+
           <ul className="password-requirements">
             <li>At least 8 characters</li>
             <li>One uppercase letter (A-Z)</li>

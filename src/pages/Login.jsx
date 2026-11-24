@@ -1,16 +1,20 @@
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const { loginUser } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [accountType, setAccountType] = useState("student");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const redirectTo = location.state?.from?.pathname || "/";
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -21,7 +25,8 @@ function Login() {
       const isAdmin = accountType === "admin";
 
       await loginUser(identifier, password, isAdmin);
-      navigate("/");
+
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
     } finally {
@@ -54,6 +59,7 @@ function Login() {
               ? "Admin Email Address"
               : "Institutional ID"}
           </label>
+
           <input
             id="identifier"
             type={accountType === "admin" ? "email" : "text"}
@@ -83,7 +89,13 @@ function Login() {
         </form>
 
         <p className="auth-switch">
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            state={{ from: location.state?.from }}
+          >
+            Sign up
+          </Link>
         </p>
       </div>
     </main>

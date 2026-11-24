@@ -1,7 +1,10 @@
 
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createFoundItem } from "../services/itemService";
+import {
+  createFoundItem,
+  uploadImage,
+} from "../services/itemService";
 import { getCategories } from "../services/categoryService";
 import { useAuth } from "../context/AuthContext";
 
@@ -18,6 +21,7 @@ function ReportFound() {
     category_id: "",
   });
 
+  const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -48,6 +52,17 @@ function ReportFound() {
     }));
   }
 
+  function handleImageChange(event) {
+    const selectedImage = event.target.files[0];
+
+    if (!selectedImage) {
+      setImage(null);
+      return;
+    }
+
+    setImage(selectedImage);
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
@@ -60,12 +75,20 @@ function ReportFound() {
     setLoading(true);
 
     try {
+      let imageUrl = "";
+
+      if (image) {
+        const uploadData = await uploadImage(image);
+        imageUrl = uploadData.image_url;
+      }
+
       const data = await createFoundItem({
         ...formData,
         category_id: Number(formData.category_id),
+        image_url: imageUrl,
       });
 
-      navigate(`/items/${data.item.id}`);
+      navigate(`/items/${data.item.id}?type=found`);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -147,6 +170,16 @@ function ReportFound() {
             </option>
           ))}
         </select>
+
+        <label htmlFor="item_image">Item image (optional)</label>
+        <input
+          id="item_image"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          onChange={handleImageChange}
+        />
+
+        {image && <p>Selected image: {image.name}</p>}
 
         {error && <p className="form-error">{error}</p>}
 

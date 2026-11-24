@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useEffect, useState } from "react";
 import * as authService from "../services/authService";
 
@@ -34,7 +35,12 @@ export function AuthProvider({ children }) {
   }
 
   async function signupUser(userDetails) {
-    return authService.signup(userDetails);
+    const data = await authService.signup(userDetails);
+
+    // Save the newly registered user as authenticated.
+    setUser(data.user);
+
+    return data;
   }
 
   async function logoutUser() {
