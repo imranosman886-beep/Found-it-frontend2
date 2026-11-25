@@ -12,6 +12,7 @@ function Signup() {
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
   const [institutionalId, setInstitutionalId] = useState("");
   const [universityCode, setUniversityCode] = useState("MOR");
   const [accountType, setAccountType] = useState("student");
@@ -23,6 +24,26 @@ function Signup() {
   async function handleSubmit(event) {
     event.preventDefault();
     setError("");
+
+    if (!fullName.trim()) {
+      setError("Please enter your full name.");
+      return;
+    }
+
+    if (!email.trim()) {
+      setError("Please enter your institutional email.");
+      return;
+    }
+
+    if (!contactEmail.trim()) {
+      setError("Please enter your personal contact email.");
+      return;
+    }
+
+    if (email.trim().toLowerCase() === contactEmail.trim().toLowerCase()) {
+      setError("Your personal email must be different from your institutional email.");
+      return;
+    }
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters.");
@@ -58,15 +79,15 @@ function Signup() {
 
     try {
       await signupUser({
-        full_name: fullName,
-        email,
+        full_name: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        contact_email: contactEmail.trim().toLowerCase(),
         institutional_id: institutionalId,
         university_code: universityCode,
         account_type: accountType,
         password,
       });
 
-      // Go directly to the page the user originally wanted.
       navigate(
         `${redirectTo.pathname || "/"}${redirectTo.search || ""}${redirectTo.hash || ""}`,
         { replace: true }
@@ -106,6 +127,19 @@ function Signup() {
             placeholder="Enter your university email"
             required
           />
+
+          <label htmlFor="contactEmail">Personal Contact Email</label>
+          <input
+            id="contactEmail"
+            type="email"
+            value={contactEmail}
+            onChange={(event) => setContactEmail(event.target.value)}
+            placeholder="Enter your personal email"
+            required
+          />
+          <small>
+            We'll use this email for welcome messages and important FoundIt notifications.
+          </small>
 
           <label htmlFor="institutionalId">Institutional ID</label>
           <input

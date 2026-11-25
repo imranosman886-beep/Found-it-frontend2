@@ -4,6 +4,7 @@ import apiRequest from "./api";
 export function signup({
   full_name,
   email,
+  contact_email,
   institutional_id,
   university_code,
   account_type,
@@ -14,6 +15,7 @@ export function signup({
     body: JSON.stringify({
       full_name,
       email,
+      contact_email,
       institutional_id,
       university_code,
       account_type,
