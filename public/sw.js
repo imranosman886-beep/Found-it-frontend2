@@ -1,10 +1,12 @@
 
-const CACHE_NAME = "foundit-app-v1";
+const CACHE_NAME = "foundit-app-v2";
 
 const APP_FILES = [
   "/",
   "/manifest.webmanifest",
-  "/favicon.svg"
+  "/favicon.svg",
+  "/images/icon-192.png",
+  "/images/icon-512.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -20,7 +22,9 @@ self.addEventListener("activate", (event) => {
     caches.keys().then((keys) =>
       Promise.all(
         keys
-          .filter((key) => key !== CACHE_NAME)
+          .filter(
+            (key) => key.startsWith("foundit-") && key !== CACHE_NAME
+          )
           .map((key) => caches.delete(key))
       )
     )
